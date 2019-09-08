@@ -1,3 +1,11 @@
+
+#output model files
+*.yaml
+
+#input and output files
+*.mid
+*.csv
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -5,14 +13,6 @@ __pycache__/
 
 #editor files
 *~
-
-#data files
-*.expr
-*.out
-*.yaml
-
-#experiments
-experiments.ipynb
 
 # C extensions
 *.so
