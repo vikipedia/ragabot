@@ -17,22 +17,34 @@ def generate_tokens(pat, text):
     for m in iter(scanner.match, None):
         yield m.group()
 
+
+def midi_for_pauses(p, note, timeslot):
+    subnotes = list(generate_tokens(p, note))
+    pauses = subnotes.count("$")
+    scopy = subnotes[:-pauses]
+    t = len(subnotes[:-pauses])
+    for item in subnotes[:-pauses][:-1]:
+            yield from get_midi_message(item, timeslot=timeslot//t)
+    yield from get_midi_message(subnotes[:-pauses][-1], timeslot=timeslot//t+timeslot*pauses)
+
 def get_midi_message(note, velocity=64,timeslot=128):
     p = re.compile(get_regex())
     stdnotes = notations()
     start = 58 #mandra Sa
     if note in stdnotes:
-        print(note)    i = stdnotes.index(note)
+        i = stdnotes.index(note)
         s = Message('note_on', note=i+start, channel=0, velocity=velocity, time=4)
         e = Message('note_off', note=i+start, channel=0, velocity=velocity//16, time=timeslot*3)
         yield from [s,e]
     elif "$" in note:
-        subnotes = list(generate_tokens(p, note))
-        yield from get_midi_message(subnotes[0], timeslot=timeslot*len(subnotes))
+        yield from midi_for_pauses(p, note, timeslot)
     else:
-        subnotes = list(generate_tokens(p, note))
-        for n in subnotes:
-            yield from get_midi_message(n, timeslot=timeslot//len(subnotes))
+        yield from midi_for_subnotes(p, note, timeslot)
+
+def midi_for_subnotes(p, note, timeslot):
+    subnotes = list(generate_tokens(p, note))
+    for n in subnotes:
+        yield from get_midi_message(n, timeslot=timeslot//len(subnotes))
 
 def test_get_midi_message():
     notes = notations()
