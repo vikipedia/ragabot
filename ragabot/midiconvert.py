@@ -22,7 +22,7 @@ def get_midi_message(note, velocity=64,timeslot=128):
     stdnotes = notations()
     start = 58 #mandra Sa
     if note in stdnotes:
-        i = stdnotes.index(note)
+        print(note)    i = stdnotes.index(note)
         s = Message('note_on', note=i+start, channel=0, velocity=velocity, time=4)
         e = Message('note_off', note=i+start, channel=0, velocity=velocity//16, time=timeslot*3)
         yield from [s,e]
