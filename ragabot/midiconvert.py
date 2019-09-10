@@ -9,7 +9,7 @@ def notations():
 
 def get_regex():
     notes = ['Sa','Re_',"Re","Ga_","Ga","Ma__","Ma","Pa","Dha_","Dha","Ni_","Ni"]
-    allnotes = [s.lower() for s in notes] + notes + [s.upper() for s in notes]
+    allnotes = [s.lower() for s in notes] + notes + [s.upper() for s in notes] + ["\$"]
     return "|".join([ "({0})".format(i) for i in allnotes])
 
 def generate_tokens(pat, text):
@@ -26,6 +26,9 @@ def get_midi_message(note, velocity=64,timeslot=128):
         s = Message('note_on', note=i+start, channel=0, velocity=velocity, time=4)
         e = Message('note_off', note=i+start, channel=0, velocity=velocity//16, time=timeslot*3)
         yield from [s,e]
+    elif "$" in note:
+        subnotes = list(generate_tokens(p, note))
+        yield from get_midi_message(subnotes[0], timeslot=timeslot*len(subnotes))
     else:
         subnotes = list(generate_tokens(p, note))
         for n in subnotes:

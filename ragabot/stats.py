@@ -12,8 +12,26 @@ def histogram(data):
             itemd = hist.get(item, {})
             itemd[line[i+1]] = itemd.get(line[i+1], 0) + 1
             hist[item] = itemd
-
+            
     return hist
+
+def test_histogram():
+    data = """Sa,Re,Ga,Ma,Pa$,Dha,Ni,SA
+    SA,Ni,Dha$,Pa,Ma,Ga,Re,Sa
+    """
+    hist = histogram([line.strip().split(",") for line in data.strip().split("\n")])
+    hist1 = {
+            "Sa":{"Re":1},
+            "Re":{"Sa":1,"Ga":1},
+            "Ga":{"Re":1,"Ma":1},
+            "Ma":{"Ga":1,"Pa$":1},
+            "Pa$":{"Dha":1},
+            "Dha":{"Ni":1},
+            "Dha$":{"Pa":1},
+            "Ni":{"SA":1,"Dha$":1},
+            "SA":{"Ni":1},
+            "Pa":{"Ma":1}}
+    assert hist == hist1
 
 def transition_probability(hist):
     prob = {}

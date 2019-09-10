@@ -1,6 +1,7 @@
 import click
 import yaml
 from stats import transition_probability, sample
+import random
 
 def aalap(initial, histogram):
     transition_prob = transition_probability(histogram)
@@ -8,6 +9,9 @@ def aalap(initial, histogram):
 
     while True:
         yield current
+        if current not in transition_prob:
+            current = random.choice(list(transition_prob.keys()))
+            yield current
         probs = transition_prob[current]
         items = [i for i in probs.keys()]
         pvalues = [probs[item] for item in items]
