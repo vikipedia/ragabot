@@ -16,5 +16,5 @@ Given the above structures, an interesting question is the following: are these 
 python train.py bhooptraining.csv --output bhoopmodel.yaml
 python bot.py bhoopmodel.yaml bhooptune.csv
 python midiconvert.py bhooptune.csv
-timidity bhooptune.mid
+python midiplay.py bhooptune.mid
 ```
