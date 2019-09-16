@@ -30,7 +30,7 @@ def midi_for_pauses(p, note, timeslot):
 def get_midi_message(note, velocity=64,timeslot=128):
     p = re.compile(get_regex())
     stdnotes = notations()
-    start = 58 #mandra Sa
+    start = 58 #mandra Sa , c#
     if note in stdnotes:
         i = stdnotes.index(note)
         s = Message('note_on', note=i+start, channel=0, velocity=velocity, time=4)
