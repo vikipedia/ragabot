@@ -27,10 +27,10 @@ def midi_for_pauses(p, note, timeslot):
             yield from get_midi_message(item, timeslot=timeslot//t)
     yield from get_midi_message(subnotes[:-pauses][-1], timeslot=timeslot//t+timeslot*pauses)
 
-def get_midi_message(note, velocity=64,timeslot=128):
+def get_midi_message(note, velocity=64,timeslot=128, sa=58):
     p = re.compile(get_regex())
     stdnotes = notations()
-    start = 58 #mandra Sa , c#
+    start = sa #mandra Sa , c# -> 58
     if note in stdnotes:
         i = stdnotes.index(note)
         s = Message('note_on', note=i+start, channel=0, velocity=velocity, time=4)
@@ -56,13 +56,13 @@ def test_get_midi_message():
     assert m[2].note == 30 + notes.index("Ma__")
 
 
-def create_midi(seq, filename="tune.mid"):
+def create_midi(seq, filename="tune.mid", program=40, sa=58):
     mid = MidiFile()
     track = MidiTrack()
     mid.tracks.append(track)
-    track.append(Message('program_change', channel=0, program=40, time=0))#grand piono
+    track.append(Message('program_change', channel=0, program=program, time=0))#grand piono
     for i in seq:
-        for m in get_midi_message(i):
+        for m in get_midi_message(i, sa=sa):
             track.append(m)
 
     mid.save(filename)
@@ -73,13 +73,18 @@ def tune_notations(file):
         for line in f:
             yield from line.strip().split(",")
 
-@click.command()
-@click.argument("notation", required=True)
-@click.argument("midi", default=None , required=False)
-def midi(notation, midi):
+def midiconvert(notation, midi, sa, instrument):
     if not midi:
         midi = ".".join(notation.split(".")[:-1]+["mid"])
-    create_midi(tune_notations(notation), filename=midi)
+    create_midi(tune_notations(notation), filename=midi, program=instrument, sa=sa)
+
+@click.command()
+@click.option("--sa", default=58, help="Mandra sa location on piono, by default c#")
+@click.option("--instrument", default=40, help="Instrument, default is violin")
+@click.argument("notation", required=True)
+@click.argument("midi", default=None , required=False)
+def midiconvert_(notation, midi, sa, instrument):
+    midiconvert(notation, midi, sa, instrument)
 
 if __name__ == "__main__":
-    midi()
+    midiconvert_()

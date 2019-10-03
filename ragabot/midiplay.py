@@ -22,12 +22,9 @@ def play_music(music_file):
     while pygame.mixer.music.get_busy():
         # check if playback has finished
         clock.tick(30)
-# pick a midi music file you have ...
-# (if not in working folder use full path)
-@click.command()
-@click.argument("music_file")
+
+
 def play(music_file):
-    music_file = sys.argv[1] #"Latin.mid"
     freq = 44100    # audio CD quality
     bitsize = -16   # unsigned 16 bit
     channels = 2    # 1 is mono, 2 is stereo
@@ -44,5 +41,10 @@ def play(music_file):
         pygame.mixer.music.stop()
         raise SystemExit
 
+@click.command()
+@click.argument("music_file")
+def play_(music_file):
+    play(music_file)
+
 if __name__ == "__main__":
-    play()
+    play_()

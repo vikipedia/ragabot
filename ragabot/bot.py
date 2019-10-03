@@ -20,12 +20,6 @@ def aalap(initial, histogram):
 def take(seq, n):
     return [next(seq) for i in range(n)]
 
-@click.command()
-@click.option("--bitcount", default=16, help="Number of notes to be produced per line")
-@click.option("--lines", default=4, help="Number of lines in the tune")
-@click.option("--startnote", default='Sa', help="Define a note where tune should start")
-@click.argument("model", required=True, type=click.File("r"))
-@click.argument("output", default="bottune.csv",type=click.File("w"))
 def bot(bitcount, lines, startnote, model, output):
     histogram  = yaml.safe_load(model)
     raga = aalap(startnote, histogram)
@@ -34,5 +28,14 @@ def bot(bitcount, lines, startnote, model, output):
         output.write(",".join(items))
         output.write("\n")
 
+@click.command()
+@click.option("--bitcount", default=16, help="Number of notes to be produced per line")
+@click.option("--lines", default=4, help="Number of lines in the tune")
+@click.option("--startnote", default='Sa', help="Define a note where tune should start")
+@click.argument("model", required=True, type=click.File("r"))
+@click.argument("output", default="bottune.csv",type=click.File("w"))
+def bot_(bitcount, lines, startnote, model, output):
+    bot(bitcount, lines, startnote, model, output)
+
 if __name__ == "__main__":
-    bot()
+    bot_()
