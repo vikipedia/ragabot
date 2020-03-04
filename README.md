@@ -3,6 +3,8 @@ Ragas in Hindustani classical music are characterized by certain structures. The
 
 Given the above structures, an interesting question is the following: are these structures sufficiently well defined for a computer to ‘compose’ tunes in a certain raga?
 
+Have a look at our pycon india 2019 talk https://www.youtube.com/watch?v=LQNzvpKYax8&list=PL6GW05BfqWIfsflQt05LM3FTX6cd7PGps&index=12
+
 ## A simple usage guide
 - Clone the repository
 `git clone https://github.com/vikipedia/ragabot.git`
