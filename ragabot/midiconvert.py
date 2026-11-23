@@ -9,7 +9,7 @@ def notations():
 
 def get_regex():
     notes = ['Sa','Re_',"Re","Ga_","Ga","Ma__","Ma","Pa","Dha_","Dha","Ni_","Ni"]
-    allnotes = [s.lower() for s in notes] + notes + [s.upper() for s in notes] + ["\$"]
+    allnotes = [s.lower() for s in notes] + notes + [s.upper() for s in notes] + [r"\$"]
     return "|".join([ "({0})".format(i) for i in allnotes])
 
 def generate_tokens(pat, text):
@@ -48,12 +48,13 @@ def midi_for_subnotes(p, note, timeslot):
 
 def test_get_midi_message():
     notes = notations()
+    sa = 58  # default mandra Sa used by get_midi_message
     m1,m2 = list(get_midi_message("Sa"))
-    assert m1.note == 30 + notes.index("Sa")
+    assert m1.note == sa + notes.index("Sa")
     m = list(get_midi_message("SaMa__"))
     assert len(m) == 4
-    assert m[0].note == 30 + notes.index("Sa")
-    assert m[2].note == 30 + notes.index("Ma__")
+    assert m[0].note == sa + notes.index("Sa")
+    assert m[2].note == sa + notes.index("Ma__")
 
 
 def create_midi(seq, filename="tune.mid", program=40, sa=58):
